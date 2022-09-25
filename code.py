@@ -115,7 +115,7 @@ bob_bits = bob_bits[100:] # Alice discards the first 100 bits
 key = "" 
 for bit in alice_bits: # Or bob_bits, since both should be the same
     key += bit
-print("Shhhhh, the key is:")
+print("The Private shared key is")
 print(str(key))
-print("Don't tell anyone!")
+#print("Don't tell anyone!")
 print("\nThe key is " + str(len(key)) + " bits long.")
