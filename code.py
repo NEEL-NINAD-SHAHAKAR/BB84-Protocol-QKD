@@ -52,6 +52,8 @@ def encode(bits, bases):
             encoded_qubits.append(qc)
             
     return (encoded_qubits)
+
+
 # Encode Alice's bits
 encoded_qubits = encode(alice_bits, alice_bases)
 # Print circuits for first 5 qubits.
@@ -86,3 +88,34 @@ def measure(qubits, bases):
 qubits_received = QUANTUM_CHANNEL # Receive qubits from quantum channel
 bob_bits = measure(qubits_received, bob_bases)
 print("The first few bits Bob received are: " + bob_bits[:10] + "...")
+
+CLASSICAL_CHANNEL = alice_bases # Alice tells Bob which bases she used
+
+# Store the indices of the bases they share in common
+common_bases = [i for i in range(KEY_LENGTH) if CLASSICAL_CHANNEL[i]==bob_bases[i]]
+print("The indices of the first 10 bases they share in common are: " + str(common_bases[:10]))
+
+bob_bits = [bob_bits[index] for index in common_bases]
+
+CLASSICAL_CHANNEL = common_bases # Bob tells Alice which bases they shared in common
+alice_bits = [alice_bits[index] for index in common_bases] # Alice keeps only the bits they shared in common
+
+CLASSICAL_CHANNEL = alice_bits[:100] # Alice tells Bob the first 100 bits she has left.
+# Bob checks if they match the first 100 bits that he has
+if CLASSICAL_CHANNEL == bob_bits[:100]:
+    print("Yep, Alice and Bob seem to have the same bits!")
+else:
+    print("Uh oh, at least one of the bits is different.")
+
+
+alice_bits = alice_bits[100:] # Alice discards the first 100 bits
+bob_bits = bob_bits[100:] # Alice discards the first 100 bits
+
+
+key = "" 
+for bit in alice_bits: # Or bob_bits, since both should be the same
+    key += bit
+print("Shhhhh, the key is:")
+print(str(key))
+print("Don't tell anyone!")
+print("\nThe key is " + str(len(key)) + " bits long.")
